@@ -22,3 +22,4 @@ mes "Created by:"+GetAlbumArtistName(mp3info)
 mes "--- End File Info ---"
 await
 loop
+end
