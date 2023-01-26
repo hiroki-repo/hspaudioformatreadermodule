@@ -26,7 +26,11 @@ if (metatype)=3{
 	if (peek(oggtag,cnt2+4+1+6+cnt)=0x1) & (peek(oggtag,cnt2+4+1+6+cnt)!sizeoftaginfos){cnt4add=cnt:break}
 	sdim stringoftags,sizeoftaginfos
 	if (cnt>=1){
-		memcpy stringoftags,oggtag,sizeoftaginfos,0,cnt2+4+1+6+cnt+4
+		if (varsize(oggtag)-(cnt2+4+1+6+cnt+4))<=sizeoftaginfos{
+			memcpy stringoftags,oggtag,(varsize(oggtag)-(cnt2+4+1+6+cnt+4)),0,cnt2+4+1+6+cnt+4
+		}else{
+			memcpy stringoftags,oggtag,sizeoftaginfos,0,cnt2+4+1+6+cnt+4
+		}
 		if stringoftags=""{break}
 		sdim stringoftagss,4096,2
 		split stringoftags,"=",stringoftagss
