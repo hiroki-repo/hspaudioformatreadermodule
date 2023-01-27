@@ -18,6 +18,7 @@ mes "Year      :"+GetReleasedYear(mp3info)
 mes "Track ID  :"+GetTrackNumber(mp3info)
 mes "ISRC      :"+GetISRC(mp3info)
 mes "Album     :"+GetAlbumName(mp3info)
+mes "Disc No   :"+GetDiscNumber(mp3info)
 mes "Created by:"+GetAlbumArtistName(mp3info)
 mes "--- End File Info ---"
 await

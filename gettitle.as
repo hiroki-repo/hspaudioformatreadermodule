@@ -253,5 +253,134 @@ if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
 }
 }
 return result
+#defcfunc GetDiscNumber array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="TPOS"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="TPA"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="DISCNUMBER"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="dskn"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:trkid=lpeek(data,0):trkid=BE2LE32(trkid):data=str(trkid):break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetCopyRightsInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="TCOP"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="TCR"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="COPYRIGHT"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetLicenseInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="WCOP"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="WCP"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="LICENSE"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetOfficialWebsiteInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="WOAF"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="WAF"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="CONTACT"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetArtistWebsiteInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="WOAR"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="WAR"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="CONTACT"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetSourceWebsiteInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="WOAS"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="WAS"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="CONTACT"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetPublisherWebsiteInfo array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="WPUB"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="WPB"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="CONTACT"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
+#defcfunc GetAudioComment array prm_0
+flac=0
+sdim data,4096
+sdim data4trans,4096
+result=""
+cntx=-1
+repeat length(prm_0):if prm_0(cnt,0)="COMM"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="COM"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop}
+if cntx=-1{repeat length(prm_0):if prm_0(cnt,0)="DESCRIPTION"{cntx=cnt:memcpy data,prm_0(cnt,1),varsize(prm_0(cnt,1)),0,0:break}:loop:flac=1}
+if flac=1{result=utf8n2sjis@(data)}else{
+memcpy data4trans,data,4095,0,1
+result=data4trans
+if peek(data,0)==1{memcpy data4trans,data,4093,0,3:result=utf16n2sjis(data4trans)}
+if peek(data,0)==3{result=utf8n2sjis@(data4trans)}
+}
+return result
 #global
 #endif
