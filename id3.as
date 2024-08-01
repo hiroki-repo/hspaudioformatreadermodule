@@ -26,6 +26,7 @@ continue cnt+artmp+10
 loop
 return 0
 #deffunc GetID3Array str prm_0,array prm_1
+loadedmp3picture=0
 exist prm_0:strsize2=strsize:if strsize2=-1{return -1}
 sdim magic,64:bload prm_0,magic,3,0:if magic!="ID3"{
 if strsize2>=128{
@@ -67,7 +68,7 @@ return -1
 }
 cntx=0
 id3size=0:bload prm_0,id3size,4,6:id3size=BE2LE32(id3size)
-sdim id3tag,id3size:bload prm_0,id3tag,id3size,0
+sdim id3tag,id3size+10:bload prm_0,id3tag,id3size+10,0
 sdim id3fid,4
 repeat id3size-10
 wpoke id3fid,3,0
@@ -77,6 +78,11 @@ memcpy id3fid,id3tag,3,0,10+cnt
 if id3fid=""{break}
 artmp=(lpeek(id3tag,10+cnt+3)&0xFFFFFF)
 artmp=BE2LE24(artmp)
+if id3fid="PIC"{
+	sdim pictureofmp3,artmp
+	memcpy pictureofmp3,id3tag,artmp,0,10+cnt+6
+	loadedmp3picture=1
+}
 prm_1(cntx,0)=id3fid
 prm_1(cntx,1)=""
 if artmp>=varsize(prm_1(cntx,1)){
@@ -102,6 +108,11 @@ if id3fid=""{break}
 if (varsize(id3tag)-(10+cnt+4))<4{break}
 artmp=lpeek(id3tag,10+cnt+4)
 artmp=BE2LE32(artmp)
+if id3fid="APIC"{
+	sdim pictureofmp3,artmp
+	memcpy pictureofmp3,id3tag,artmp,0,10+cnt+10
+	loadedmp3picture=1
+}
 prm_1(cntx,0)=id3fid
 prm_1(cntx,1)=""
 if artmp>=varsize(prm_1(cntx,1)){
@@ -123,6 +134,62 @@ continue cnt+artmp+10
 }
 loop
 sdim id3tag,64
+return 0
+#deffunc PicID3Load str prm_0_picloader,int prm_1_picloader
+sdim temp,4096,256,2
+GetID3Array prm_0_picloader,temp
+sdim temp,64
+if loadedmp3picture=0{return -1}
+sdim minetype,64
+memcpy minetype,pictureofmp3,64,0,1
+sdim pictureofmp3x,varsize(pictureofmp3)
+posofimage2=0:posofimage=0
+posofimage=strlen(minetype)+3
+magic=0
+magicmask=0xFF
+switch minetype
+case "image/vnd.microsoft.icon"
+magic=0x00010000
+magicmask=0xffffffff
+swbreak
+case "image/bmp"
+magic=0x00004d42
+magicmask=0xffff
+swbreak
+case "image/jpeg"
+magic=0x00ffd8ff
+magicmask=0xffffff
+swbreak
+case "image/png"
+magic=0x474e5089
+magicmask=0xffffffff
+swbreak
+case "image/gif"
+magic=0x38464947
+magicmask=0xffffffff
+swbreak
+swend
+repeat varsize(pictureofmp3):if (peek(pictureofmp3,cnt+posofimage)&0x80)!0 and (peek(pictureofmp3,cnt+posofimage+1)&0xC0)=0x80{continue cnt+((peek(pictureofmp3,cnt+posofimage)&0xC0)=0xC0)+((peek(pictureofmp3,cnt+posofimage)&0xE0)=0xE0)+((peek(pictureofmp3,cnt+posofimage)&0xF8)=0xF0)+1}:if peek(pictureofmp3,cnt+posofimage)=0{posofimage2=cnt:if (lpeek(pictureofmp3,(posofimage+posofimage2+1))&magicmask)=magic{break}}:loop
+memcpy pictureofmp3x,pictureofmp3,(varsize(pictureofmp3)-(posofimage+1+posofimage2)),0,posofimage+posofimage2+1
+memfile pictureofmp3x
+switch minetype
+case "image/vnd.microsoft.icon"
+picload "MEM:a.ico",prm_1_picloader
+swbreak
+case "image/bmp"
+picload "MEM:a.bmp",prm_1_picloader
+swbreak
+case "image/jpeg"
+picload "MEM:a.jpg",prm_1_picloader
+swbreak
+case "image/png"
+picload "MEM:a.png",prm_1_picloader
+swbreak
+case "image/gif"
+picload "MEM:a.gif",prm_1_picloader
+swbreak
+swend
+sdim pictureofmp3x,64
 return 0
 #global
 #endif
